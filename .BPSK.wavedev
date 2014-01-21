@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ASCII"?>
+<codegen:WaveDevSettings xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:codegen="http://www.redhawk.gov/model/codegen">
+  <implSettings key="cpp">
+    <value outputDir="cpp" template="redhawk.codegen.jinja.cpp.component.pull" generatorId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator" primary="true">
+      <generatedFileCRCs crc="1746641546" file="reconf"/>
+      <generatedFileCRCs crc="3402512454" file="port_impl.cpp"/>
+      <generatedFileCRCs crc="864280150" file="build.sh"/>
+      <generatedFileCRCs crc="2482366821" file="configure.ac"/>
+      <generatedFileCRCs crc="4222380788" file="port_impl.h"/>
+      <generatedFileCRCs crc="1765552184" file="BPSK_base.cpp"/>
+      <generatedFileCRCs crc="1756679734" file="BPSK.h"/>
+      <generatedFileCRCs crc="3297404429" file="main.cpp"/>
+      <generatedFileCRCs crc="4001858283" file="BPSK.cpp"/>
+      <generatedFileCRCs crc="3009927411" file="../BPSK.spec"/>
+      <generatedFileCRCs crc="1018237472" file="BPSK_base.h"/>
+      <generatedFileCRCs crc="1942573142" file="struct_props.h"/>
+      <generatedFileCRCs crc="2483557392" file="Makefile.am"/>
+    </value>
+  </implSettings>
+  <implSettings key="cpp_arm">
+    <value outputDir="cpp_arm" template="redhawk.codegen.jinja.cpp.component.pull" generatorId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator">
+      <generatedFileCRCs crc="2501119060" file="BPSK.cpp"/>
+      <generatedFileCRCs crc="1756679734" file="BPSK.h"/>
+      <generatedFileCRCs crc="1276541470" file="BPSK_base.cpp"/>
+      <generatedFileCRCs crc="1018237472" file="BPSK_base.h"/>
+      <generatedFileCRCs crc="1478972677" file="Makefile.am"/>
+      <generatedFileCRCs crc="864280150" file="build.sh"/>
+      <generatedFileCRCs crc="2482366821" file="configure.ac"/>
+      <generatedFileCRCs crc="3297404429" file="main.cpp"/>
+      <generatedFileCRCs crc="1252906162" file="port_impl.cpp"/>
+      <generatedFileCRCs crc="4222380788" file="port_impl.h"/>
+      <generatedFileCRCs crc="1746641546" file="reconf"/>
+      <generatedFileCRCs crc="1942573142" file="struct_props.h"/>
+    </value>
+  </implSettings>
+</codegen:WaveDevSettings>
