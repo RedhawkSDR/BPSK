@@ -23,12 +23,10 @@
 
 #include "BPSK_base.h"
 
-class BPSK_i;
-
 class BPSK_i : public BPSK_base
 {
     ENABLE_LOGGING
-    public: 
+    public:
         BPSK_i(const char *uuid, const char *label);
         ~BPSK_i();
         int serviceFunction();

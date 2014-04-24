@@ -22,8 +22,6 @@
 #include "ossie/ossieSupport.h"
 
 #include "BPSK.h"
-
-
 int main(int argc, char* argv[])
 {
     BPSK_i* BPSK_servant;

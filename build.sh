@@ -34,12 +34,12 @@ if [ "$1" = "rpm" ]; then
         exit 1
     fi
 else
-    for impl in cpp cpp_armv7l ; do
+    for impl in cpp cpp_arm ; do
         cd $impl
         if [ -e build.sh ]; then
             ./build.sh $*
         elif [ -e reconf ]; then
-            ./reconf && ./configure && make
+            ./reconf && ./configure && make $*
         else
             echo "No build.sh found for $impl"
         fi

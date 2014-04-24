@@ -32,96 +32,44 @@
 
 BPSK_base::BPSK_base(const char *uuid, const char *label) :
     Resource_impl(uuid, label),
-    serviceThread(0)
+    ThreadedComponent()
 {
-    construct();
+    loadProperties();
+
+    dataFloat_in_data = new bulkio::InFloatPort("dataFloat_in_data");
+    addPort("dataFloat_in_data", dataFloat_in_data);
+    dataFloat_in_clock = new bulkio::InFloatPort("dataFloat_in_clock");
+    addPort("dataFloat_in_clock", dataFloat_in_clock);
+    dataShort_out = new bulkio::OutShortPort("dataShort_out");
+    addPort("dataShort_out", dataShort_out);
 }
 
-void BPSK_base::construct()
+BPSK_base::~BPSK_base()
 {
-    Resource_impl::_started = false;
-    loadProperties();
-    serviceThread = 0;
-    
-    PortableServer::ObjectId_var oid;
-    dataFloat_in_data = new bulkio::InFloatPort("dataFloat_in_data");
-    oid = ossie::corba::RootPOA()->activate_object(dataFloat_in_data);
-    dataFloat_in_clock = new bulkio::InFloatPort("dataFloat_in_clock");
-    oid = ossie::corba::RootPOA()->activate_object(dataFloat_in_clock);
-    dataShort_out = new bulkio::OutShortPort("dataShort_out");
-    oid = ossie::corba::RootPOA()->activate_object(dataShort_out);
-
-    registerInPort(dataFloat_in_data);
-    registerInPort(dataFloat_in_clock);
-    registerOutPort(dataShort_out, dataShort_out->_this());
+    delete dataFloat_in_data;
+    dataFloat_in_data = 0;
+    delete dataFloat_in_clock;
+    dataFloat_in_clock = 0;
+    delete dataShort_out;
+    dataShort_out = 0;
 }
 
 /*******************************************************************************************
     Framework-level functions
     These functions are generally called by the framework to perform housekeeping.
 *******************************************************************************************/
-void BPSK_base::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
-{
-}
-
 void BPSK_base::start() throw (CORBA::SystemException, CF::Resource::StartError)
 {
-    boost::mutex::scoped_lock lock(serviceThreadLock);
-    if (serviceThread == 0) {
-        dataFloat_in_data->unblock();
-        dataFloat_in_clock->unblock();
-        serviceThread = new ProcessThread<BPSK_base>(this, 0.1);
-        serviceThread->start();
-    }
-    
-    if (!Resource_impl::started()) {
-    	Resource_impl::start();
-    }
+    Resource_impl::start();
+    ThreadedComponent::startThread();
 }
 
 void BPSK_base::stop() throw (CORBA::SystemException, CF::Resource::StopError)
 {
-    boost::mutex::scoped_lock lock(serviceThreadLock);
-    // release the child thread (if it exists)
-    if (serviceThread != 0) {
-        dataFloat_in_data->block();
-        dataFloat_in_clock->block();
-        if (!serviceThread->release(2)) {
-            throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
-        }
-        serviceThread = 0;
+    Resource_impl::stop();
+    if (!ThreadedComponent::stopThread()) {
+        throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
     }
-    
-    if (Resource_impl::started()) {
-    	Resource_impl::stop();
-    }
-}
-
-CORBA::Object_ptr BPSK_base::getPort(const char* _id) throw (CORBA::SystemException, CF::PortSupplier::UnknownPort)
-{
-
-    std::map<std::string, Port_Provides_base_impl *>::iterator p_in = inPorts.find(std::string(_id));
-    if (p_in != inPorts.end()) {
-        if (!strcmp(_id,"dataFloat_in_data")) {
-            bulkio::InFloatPort *ptr = dynamic_cast<bulkio::InFloatPort *>(p_in->second);
-            if (ptr) {
-                return ptr->_this();
-            }
-        }
-        if (!strcmp(_id,"dataFloat_in_clock")) {
-            bulkio::InFloatPort *ptr = dynamic_cast<bulkio::InFloatPort *>(p_in->second);
-            if (ptr) {
-                return ptr->_this();
-            }
-        }
-    }
-
-    std::map<std::string, CF::Port_var>::iterator p_out = outPorts_var.find(std::string(_id));
-    if (p_out != outPorts_var.end()) {
-        return CF::Port::_duplicate(p_out->second);
-    }
-
-    throw (CF::PortSupplier::UnknownPort());
 }
 
 void BPSK_base::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::ReleaseError)
@@ -132,14 +80,6 @@ void BPSK_base::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::Re
     } catch (CF::Resource::StopError& ex) {
         // TODO - this should probably be logged instead of ignored
     }
-
-    // deactivate ports
-    releaseInPorts();
-    releaseOutPorts();
-
-    delete(dataFloat_in_data);
-    delete(dataFloat_in_clock);
-    delete(dataShort_out);
 
     Resource_impl::releaseObject();
 }

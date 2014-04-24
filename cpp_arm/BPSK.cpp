@@ -26,19 +26,13 @@
     functionality to the base class can be extended here. Access to
     the ports can also be done from this class
 
- 	Source: BPSK.spd.xml
- 	Generated on: Thu Aug 22 13:34:33 EDT 2013
- 	REDHAWK IDE
- 	Version: 1.8.4
- 	Build id: R201305151907
-
 **************************************************************************/
 
 #include "BPSK.h"
 
 PREPARE_LOGGING(BPSK_i)
 
-BPSK_i::BPSK_i(const char *uuid, const char *label) : 
+BPSK_i::BPSK_i(const char *uuid, const char *label) :
     BPSK_base(uuid, label)
 {
 	m_zeroCrossing = 0;		// Zero crossing counter for the clock signal
