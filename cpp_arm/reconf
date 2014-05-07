@@ -19,7 +19,6 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 
-
 rm -f config.cache
 
 # Setup the libtool stuff
@@ -45,3 +44,4 @@ fi
 
 autoconf
 automake --foreign --add-missing
+

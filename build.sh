@@ -19,7 +19,6 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 
-
 if [ "$1" = "rpm" ]; then
     # A very simplistic RPM build scenario
     if [ -e BPSK.spec ]; then

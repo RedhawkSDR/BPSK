@@ -52,4 +52,4 @@ class BPSK_base : public Resource_impl, protected ThreadedComponent
 
     private:
 };
-#endif
+#endif // BPSK_IMPL_BASE_H

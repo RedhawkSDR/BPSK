@@ -28,3 +28,4 @@ int main(int argc, char* argv[])
     Resource_impl::start_component(BPSK_servant, argc, argv);
     return 0;
 }
+
