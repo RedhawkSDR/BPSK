@@ -31,7 +31,7 @@ Prefix:         %{_prefix}
 %define _infodir       %{_prefix}/info
 
 Name:           BPSK
-Version:        1.0.0dev0
+Version:        1.0.0
 Release:        1%{?dist}
 Summary:        Component %{name}
 
@@ -60,7 +60,7 @@ Component %{name}
 pushd cpp
 ./reconf
 %define _bindir %{_prefix}/dom/components/BPSK/cpp
-./configure
+%configure
 make %{?_smp_mflags}
 popd
 
