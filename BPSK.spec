@@ -31,12 +31,12 @@ Prefix:         %{_prefix}
 %define _infodir       %{_prefix}/info
 
 Name:           BPSK
-Version:        1.0.0
+Version:        1.0.0dev0
 Release:        1%{?dist}
 Summary:        Component %{name}
 
 Group:          REDHAWK/Components
-License:        None
+License:        GPL
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -64,12 +64,12 @@ pushd cpp
 make %{?_smp_mflags}
 popd
 # Implementation cpp_arm
-pushd cpp_arm
-./reconf
-%define _bindir %{_prefix}/dom/components/BPSK/cpp_arm
-%configure
-make %{?_smp_mflags}
-popd
+#pushd cpp_arm
+#./reconf
+#%define _bindir %{_prefix}/dom/components/BPSK/cpp_arm
+#%configure
+#make %{?_smp_mflags}
+#popd
 
 
 %install
@@ -80,10 +80,10 @@ pushd cpp
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
 # Implementation cpp_arm
-pushd cpp_arm
-%define _bindir %{_prefix}/dom/components/BPSK/cpp_arm
-make install DESTDIR=$RPM_BUILD_ROOT
-popd
+#pushd cpp_arm
+#%define _bindir %{_prefix}/dom/components/BPSK/cpp_arm
+#make install DESTDIR=$RPM_BUILD_ROOT
+#popd
 
 
 %clean
@@ -97,5 +97,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/dom/components/%{name}/BPSK.prf.xml
 %{_prefix}/dom/components/%{name}/BPSK.spd.xml
 %{_prefix}/dom/components/%{name}/cpp
-%{_prefix}/dom/components/%{name}/cpp_arm
+#%{_prefix}/dom/components/%{name}/cpp_arm
 
