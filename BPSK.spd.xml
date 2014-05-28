@@ -19,7 +19,7 @@
  along with this program.  If not, see http://www.gnu.org/licenses/.
 -->
 <!DOCTYPE softpkg PUBLIC "-//JTRS//DTD SCA V2.2.2 SPD//EN" "softpkg.dtd">
-<softpkg id="DCE:62b7c43a-cf6e-4b06-9311-f35bdb4c08a5" name="BPSK" type="sca_compliant" version="1.0.0dev0">
+<softpkg id="DCE:62b7c43a-cf6e-4b06-9311-f35bdb4c08a5" name="BPSK" type="sca_compliant" version="1.0.0">
   <title></title>
   <author>
     <name>null</name>

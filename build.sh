@@ -24,16 +24,16 @@ if [ "$1" = "rpm" ]; then
     if [ -e BPSK.spec ]; then
         mydir=`dirname $0`
         tmpdir=`mktemp -d`
-        cp -r ${mydir} ${tmpdir}/BPSK-1.0.0dev0
-        tar czf ${tmpdir}/BPSK-1.0.0dev0.tar.gz --exclude=".svn" -C ${tmpdir} BPSK-1.0.0dev0
-        rpmbuild -ta ${tmpdir}/BPSK-1.0.0dev0.tar.gz
+        cp -r ${mydir} ${tmpdir}/BPSK-1.0.0
+        tar czf ${tmpdir}/BPSK-1.0.0.tar.gz --exclude=".svn" -C ${tmpdir} BPSK-1.0.0
+        rpmbuild -ta ${tmpdir}/BPSK-1.0.0.tar.gz
         rm -rf $tmpdir
     else
         echo "Missing RPM spec file in" `pwd`
         exit 1
     fi
 else
-    for impl in cpp cpp_arm ; do
+    for impl in cpp ; do
         cd $impl
         if [ -e build.sh ]; then
             ./build.sh $*

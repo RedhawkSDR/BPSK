@@ -31,7 +31,7 @@ Prefix:         %{_prefix}
 %define _infodir       %{_prefix}/info
 
 Name:           BPSK
-Version:        1.0.0dev0
+Version:        1.0.0
 Release:        1%{?dist}
 Summary:        Component %{name}
 
