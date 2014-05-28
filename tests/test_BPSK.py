@@ -57,8 +57,8 @@ def main():
 	# to the inputs of the BPSK.  Connect the output of the BPSK
 	# to the input of the data sink
 	display(f, "\n****** Creating Connections *****")
-	clockSource.connect(test_component, providesPortName='dataFloat_in_clock')
-	dataSource.connect(test_component, providesPortName='dataFloat_in_data')
+	clockSource.connect(test_component, providesPortName='clockFloat_in')
+	dataSource.connect(test_component, providesPortName='dataFloat_in')
 	test_component.connect(dataSink, providesPortName='shortIn')
 	display(f, "Connections created")
 
@@ -148,7 +148,7 @@ def main():
 
                 i += 100
 
-	display(f, "\n******* Starting Component ******")
+	display(f, "\n******* Starting Components ******")
 	sb.start()
 	display(f, "Component started")
 	display(f, "** Testing Single Packet Case **")
@@ -166,7 +166,7 @@ def main():
 
 	displayList(f, "Received Data:  ",received_data)
         displayList(f, "Original Data:  ", single_packet_data)
-
+	
 	# Make sure that the received data and original data
 	# are of the same length and that they match
 	if len(received_data) == len(single_packet_data):
@@ -181,6 +181,7 @@ def main():
 
 	#******************************************************
 	display(f, "\n*** Testing Two Packet Case ****")
+
 	clockSource.push(clock[:len(two_packet_keyed_data1)], False, 'Test', (100 * 1187.5), False, [], None)
 	dataSource.push(two_packet_keyed_data1, False, 'Test', (100 * 1187.5), False, [], None)
 	time.sleep(1)
@@ -247,9 +248,9 @@ def main():
                 passed_test_3 = False
                 test_3_message = "len(received_data) != len(original_data1) + len(original_data2)"
 
-	display(f, "\n******* Stopping Component ******")
-	test_component.stop()
-	display(f, "Component stopped")
+	display(f, "\n******* Stopping Components ******")
+	sb.stop()
+	display(f, "Components stopped")
 
 	# Display the results of the unit test
 	if passed_test_1:

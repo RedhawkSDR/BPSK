@@ -22,6 +22,7 @@
 #define BPSK_IMPL_H
 
 #include "BPSK_base.h"
+#include <iostream>
 
 class BPSK_i : public BPSK_base
 {
@@ -34,12 +35,8 @@ class BPSK_i : public BPSK_base
         int m_zeroCrossing;
         int m_signLast;
         float m_symbolIntegrator;
-        double m_currXdelta;
-        double m_outputRate;
-        bool m_propChanged;
-
-        void propertyChangeListener(const std::string&);
-        void checkProperties();
+        double m_xdeltaIn;
+        BULKIO::StreamSRI m_sriOut;
 };
 
 #endif

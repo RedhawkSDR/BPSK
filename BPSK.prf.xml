@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- This file is protected by Copyright. Please refer to the COPYRIGHT file
- distributed with this source distribution.
-
- This file is part of REDHAWK.
-
- REDHAWK is free software: you can redistribute it and/or modify it
- under the terms of the GNU Lesser General Public License as published by the
- Free Software Foundation, either version 3 of the License, or (at your
- option) any later version.
-
- REDHAWK is distributed in the hope that it will be useful, but WITHOUT
- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
- for more details.
-
- You should have received a copy of the GNU Lesser General Public License
- along with this program.  If not, see http://www.gnu.org/licenses/.
--->
-
 <!DOCTYPE properties PUBLIC "-//JTRS//DTD SCA V2.2.2 PRF//EN" "properties.dtd">
 <properties>
-  <simple id="Output Rate" mode="readwrite" type="double">
-    <description>The desired output rate of the demod.  If the output rate is greater than the input rate, then the input rate is used.</description>
-    <value>1187.5</value>
+  <simple id="Output Rate" mode="readonly" type="float">
+    <description>The output rate of the demod. This is a read-only property that is calculated based on the input clock's symbol rate.</description>
+    <value>0</value>
     <units>S/s</units>
+    <kind kindtype="configure"/>
+    <action type="external"/>
+  </simple>
+  <simple id="Symbol Length" mode="readonly" type="long">
+    <description>This is a read-only property that shows the bits per symbol of input data that is to be BPSK demodulated. This is calculated from the input sampling rate and the clock's symbol rate. </description>
+    <value>0</value>
+    <units>bits</units>
     <kind kindtype="configure"/>
     <action type="external"/>
   </simple>

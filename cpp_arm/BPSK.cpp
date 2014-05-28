@@ -38,12 +38,7 @@ BPSK_i::BPSK_i(const char *uuid, const char *label) :
 	m_zeroCrossing = 0;		// Zero crossing counter for the clock signal
 	m_signLast = 0;			// The previous sign of the clock
 	m_symbolIntegrator = 0;	// The current value of the integration between the clock and data
-	m_currXdelta = 0.0;
-	m_outputRate = 0.0;
-	m_propChanged = false;
-
-	setPropertyChangeListener("Output Rate", this,
-			&BPSK_i::propertyChangeListener);
+	m_sriOut = bulkio::sri::create("BPSK_OUT"); //Create output sri object
 }
 
 BPSK_i::~BPSK_i()
@@ -52,48 +47,42 @@ BPSK_i::~BPSK_i()
 
 int BPSK_i::serviceFunction()
 {
-	bulkio::InFloatPort::dataTransfer *inputData = dataFloat_in_data->getPacket(bulkio::Const::BLOCKING);
-	bulkio::InFloatPort::dataTransfer *inputClock = dataFloat_in_clock->getPacket(bulkio::Const::BLOCKING);
+	bulkio::InFloatPort::dataTransfer *inputData = dataFloat_in->getPacket(bulkio::Const::BLOCKING);
+	bulkio::InFloatPort::dataTransfer *inputClock = clockFloat_in->getPacket(bulkio::Const::BLOCKING);
+
+	std::vector<short> outputData;
+	int signCurrent = 0;
+	int symbolCount = 0;
+	float avgSymbolLength = 0;
+	float avgOutputRate = 0;
 
 	//Check for valid packets
 	if (not inputData || not inputClock) {
 		if (inputData) {
 			delete inputData;
 		}
-
 		if (inputClock) {
 			delete inputClock;
 		}
-
 		return NOOP;
 	}
 
+	//Set numSamples to the size of the smaller packet
+	unsigned int numSamples = inputData->dataBuffer.size() > inputClock->dataBuffer.size() ?
+			inputClock->dataBuffer.size() : inputData->dataBuffer.size();
+
 	//Push new SRI
-	if (inputData->sriChanged || m_propChanged) {
-		m_currXdelta = inputData->SRI.xdelta;
-		checkProperties();
-
-		dataShort_out->pushSRI(inputData->SRI);
-
-		m_propChanged = false;
+	if (inputData->sriChanged) {
+		m_xdeltaIn = inputClock->SRI.xdelta;
+		m_sriOut = inputData->SRI;
+		dataShort_out->pushSRI(m_sriOut);
 	}
-
-	unsigned int dataSize = inputData->dataBuffer.size();
-	unsigned int clockSize = inputClock->dataBuffer.size();
-	int signCurrent = 0;
-	int symbolLength;
-
-	//Find Symbol length and set output rate
-	symbolLength = (int)(1.0 / (inputData->SRI.xdelta * m_outputRate));
-	inputData->SRI.xdelta *= symbolLength;
-
-	std::vector<short> outputData;
 
 	if (m_signLast == 0) {
 		m_signLast = (inputClock->dataBuffer[0] > 0 ? 1 : -1);
 	}
 
-	for (unsigned int i=0; (i < dataSize) && (i < clockSize); ++i) {
+	for (unsigned int i=0; i < numSamples; ++i) {
 		//Find current signal's sign and check for a zero crossing
 		signCurrent = (inputClock->dataBuffer[i] > 0 ? 1 : -1);
 
@@ -111,8 +100,10 @@ int BPSK_i::serviceFunction()
 			//new data out of the vector bounds
 
 			//Check Integral of two signals for symbol. If positive, output 1. If negative, output 0
-			//outputData[nout] = (d_symbol_integrator > 0 ? 1 : 0);
 			outputData.push_back(m_symbolIntegrator > 0 ? 1 : 0);
+
+			//keep count of total number of symbols
+			symbolCount++;
 
 			//reset zero counter and integration
 			m_symbolIntegrator = 0;
@@ -120,25 +111,26 @@ int BPSK_i::serviceFunction()
 		}
 	}
 
-	dataShort_out->pushPacket(outputData, inputData->T, inputData->EOS, inputData->streamID);
+	//Calculate Symbol Length && Output Rate
+	avgSymbolLength = float(numSamples) / symbolCount;
+	avgOutputRate = 1.0 / (m_xdeltaIn * avgSymbolLength);
+
+	//Set property value if there has been more than a 1% change
+	if (abs(avgSymbolLength - Symbol_Length) > (0.01 * Symbol_Length) ){
+		Symbol_Length = avgSymbolLength;
+	}
+	if (abs(avgOutputRate - Output_Rate) > (0.01 * Output_Rate)){
+		Output_Rate = avgOutputRate;
+		m_sriOut.xdelta = 1.0f / Output_Rate;
+		dataShort_out->pushSRI(m_sriOut);
+	}
+
+	if (outputData.size() > 0) {
+		dataShort_out->pushPacket(outputData, inputData->T, inputData->EOS, inputData->streamID);
+	}
 
 	delete inputData; // IMPORTANT: MUST RELEASE THE RECEIVED DATA BLOCKS
 	delete inputClock;
 
 	return NORMAL;
-}
-
-void BPSK_i::checkProperties()
-{
-	if (Output_Rate > 1/m_currXdelta) {
-		LOG_WARN(BPSK_i, "Output Rate greater than input rate, setting to input rate");
-		m_outputRate = 1/m_currXdelta;
-	} else {
-		m_outputRate = Output_Rate;
-	}
-}
-
-void BPSK_i::propertyChangeListener(const std::string& prop)
-{
-	m_propChanged = true;
 }

@@ -1,23 +1,3 @@
-/*
- * This file is protected by Copyright. Please refer to the COPYRIGHT file
- * distributed with this source distribution.
- *
- * This file is part of REDHAWK.
- *
- * REDHAWK is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * REDHAWK is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
- * for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see http://www.gnu.org/licenses/.
- */
-
 #include "BPSK_base.h"
 
 /*******************************************************************************************
@@ -36,20 +16,20 @@ BPSK_base::BPSK_base(const char *uuid, const char *label) :
 {
     loadProperties();
 
-    dataFloat_in_data = new bulkio::InFloatPort("dataFloat_in_data");
-    addPort("dataFloat_in_data", dataFloat_in_data);
-    dataFloat_in_clock = new bulkio::InFloatPort("dataFloat_in_clock");
-    addPort("dataFloat_in_clock", dataFloat_in_clock);
+    dataFloat_in = new bulkio::InFloatPort("dataFloat_in");
+    addPort("dataFloat_in", dataFloat_in);
+    clockFloat_in = new bulkio::InFloatPort("clockFloat_in");
+    addPort("clockFloat_in", clockFloat_in);
     dataShort_out = new bulkio::OutShortPort("dataShort_out");
     addPort("dataShort_out", dataShort_out);
 }
 
 BPSK_base::~BPSK_base()
 {
-    delete dataFloat_in_data;
-    dataFloat_in_data = 0;
-    delete dataFloat_in_clock;
-    dataFloat_in_clock = 0;
+    delete dataFloat_in;
+    dataFloat_in = 0;
+    delete clockFloat_in;
+    clockFloat_in = 0;
     delete dataShort_out;
     dataShort_out = 0;
 }
@@ -87,11 +67,20 @@ void BPSK_base::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::Re
 void BPSK_base::loadProperties()
 {
     addProperty(Output_Rate,
-                1187.5,
+                0,
                 "Output Rate",
                 "",
-                "readwrite",
+                "readonly",
                 "S/s",
+                "external",
+                "configure");
+
+    addProperty(Symbol_Length,
+                0,
+                "Symbol Length",
+                "",
+                "readonly",
+                "bits",
                 "external",
                 "configure");
 
