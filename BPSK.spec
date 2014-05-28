@@ -31,12 +31,12 @@ Prefix:         %{_prefix}
 %define _infodir       %{_prefix}/info
 
 Name:           BPSK
-Version:        1.0.0
+Version:        1.0.0dev0
 Release:        1%{?dist}
 Summary:        Component %{name}
 
 Group:          REDHAWK/Components
-License:        GPL
+License:        None
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -64,6 +64,7 @@ pushd cpp
 make %{?_smp_mflags}
 popd
 
+
 %install
 rm -rf $RPM_BUILD_ROOT
 # Implementation cpp
@@ -84,3 +85,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/dom/components/%{name}/BPSK.prf.xml
 %{_prefix}/dom/components/%{name}/BPSK.spd.xml
 %{_prefix}/dom/components/%{name}/cpp
+
