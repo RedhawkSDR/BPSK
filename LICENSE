@@ -25,7 +25,7 @@ Defining a subclass of a class defined by the Library is deemed a mode
 of using an interface provided by the Library.
 
   A "Combined Work" is a work produced by combining or linking an
-Application with the Library. The particular version of the Library
+Application with the Library.  The particular version of the Library
 with which the Combined Work was made is also called the "Linked
 Version".
 
@@ -63,7 +63,7 @@ version:
   3. Object Code Incorporating Material from Library Header Files.
 
   The object code form of an Application may incorporate material from
-a header file that is part of the Library. You may convey such object
+a header file that is part of the Library.  You may convey such object
 code under terms of your choice, provided that, if the incorporated
 material is not limited to numerical parameters, data structure
 layouts and accessors, or small macros, inline functions and templates
@@ -107,7 +107,7 @@ the following:
        Corresponding Source.
 
        1) Use a suitable shared library mechanism for linking with the
-       Library. A suitable mechanism is one that (a) uses at run time
+       Library.  A suitable mechanism is one that (a) uses at run time
        a copy of the Library already present on the user's computer
        system, and (b) will operate properly with a modified version
        of the Library that is interface-compatible with the Linked
